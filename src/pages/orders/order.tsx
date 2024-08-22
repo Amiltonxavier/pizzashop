@@ -37,7 +37,7 @@ export function Orders() {
                             </TableBody>
                         </Table>
                     </div>
-                    <Pagination totalCount={10} perPage={20} pageIndex={0} />
+                    <Pagination pageIndex={0} totalCount={153} perPage={20} />
                 </div>
 
             </div>
