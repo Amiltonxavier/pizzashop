@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios";
 
-type getProfileProps = {
+export type getProfileProps = {
   id: string;
   name: string;
   email: string;
