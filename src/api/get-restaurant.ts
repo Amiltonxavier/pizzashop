@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios";
 
-type getManagedRestaurantProps = {
+export type getManagedRestaurantProps = {
   id: string;
   name: string;
   createdAt: Date | null;
@@ -10,6 +10,16 @@ type getManagedRestaurantProps = {
 };
 
 export async function getManagedRestaurant() {
-  const response = await api.get<getManagedRestaurantProps>('/managed-restaurant');
-  return response.data
+  //throw Error()
+
+  //await new Promise((resolver, rejeit) => setTimeout(rejeit, 3000))
+  try{
+   
+    const response = await api.get<getManagedRestaurantProps>('/managed-restaurant');
+    return response.data
+  }catch{
+    throw Error()
+  }
+  
+  
 }

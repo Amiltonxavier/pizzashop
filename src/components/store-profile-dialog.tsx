@@ -7,23 +7,18 @@ import { Label } from './ui/label'
 import { Textarea } from './ui/textarea'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod'
-import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { getManagedRestaurant } from '@/api/get-restaurant'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { getManagedRestaurant, getManagedRestaurantProps } from '@/api/get-restaurant'
 import { updateProfile } from '@/api/update-profile'
 import { toast } from 'sonner'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { Spinner } from './spinner'
 import { getProfileProps } from '@/api/get-profile'
 
-type StoreProfileProps = {
-    name: string,
-    description: string
-}
-
 
 const storeProfileSchema = z.object({
     name: z.string().min(3),
-    description: z.string()
+    description: z.string().nullable()
 })
 
 type storeProfileProps = z.infer<typeof storeProfileSchema>
@@ -44,19 +39,29 @@ export default function StoreProfileDialog() {
             description: data?.description ?? ''
         }
     })
+    function updateManagedRestaurantCached( {name, description}: storeProfileProps ) {
+        const cashed = queryClient.getQueryData<getManagedRestaurantProps>(['managed-restaurant'])
+        if (cashed) {
+            queryClient.setQueryData(['managed-restaurant'], {
+                ...cashed,
+                name,
+                description
+            })
+        }
+        return { cashed }
+    }
 
     const { mutateAsync: update } = useMutation({
         mutationFn: updateProfile,
-        onSuccess(_, { name, description }) {
-            const cashed = queryClient.getQueryData<getProfileProps>(['managed-restaurant'])
-            if(cashed){
-                queryClient.setQueryData(['managed-restaurant'], {
-                    ...cashed,
-                    name,
-                    description
-                })
-            }
+        onMutate({ name, description }) {
+            const { cashed } = updateManagedRestaurantCached({ name, description })
+            return { previous: cashed }
         },
+        onError(_, __, context){
+            if(context?.previous){
+                updateManagedRestaurantCached(context.previous)
+            }
+        }
     })
 
     async function updateRegisterStroge(data: storeProfileProps) {
