@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { toast } from "sonner"
 import { Link, useNavigate } from "react-router-dom"
+import { useMutation } from "@tanstack/react-query"
+import { registerRestaurant } from "@/api/register-restaurent"
 
 const signupForm = z.object({
   email: z.string().email(),
@@ -20,14 +22,23 @@ type SignFormProps = z.infer<typeof signupForm>
 export function SignUp() {
   const { register, handleSubmit, formState: { isSubmitting } } = useForm<SignFormProps>()
   const navigate = useNavigate()
+
+  const { mutateAsync: createRestaurant } = useMutation({
+    mutationFn: registerRestaurant
+  })
+
   async function handleSignup(data: SignFormProps) {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      console.log(data)
+      await createRestaurant({
+        phone: data.phone,
+        email: data.email,
+        restaurantName: data.restaurantName,
+        managerName: data.managerName
+      })
       toast.success('Enviamos um link de autenticação no seu e-mail', {
         action: {
           label: "Login",
-          onClick: () => navigate('/sign-in')
+          onClick: () => navigate(`/sign-in?email=${data.email}`)
         }
       })
     } catch {
@@ -70,12 +81,12 @@ export function SignUp() {
               Finalizar cadastro
             </Button>
             <p className="px-6 text-center text-xs leading-relaxed text-muted-foreground">
-              Ao continuar, você concorda com o 
-              nossos <a  className="underline underline-offset-4" href="#">
+              Ao continuar, você concorda com o
+              nossos <a className="underline underline-offset-4" href="#">
                 termos de serviços
-                </a>  e{' '} 
+              </a>  e{' '}
               <a className="underline underline-offset-4" href="#">
-                políticas de privacidade</a>. 
+                políticas de privacidade</a>.
             </p>
           </form>
         </div>

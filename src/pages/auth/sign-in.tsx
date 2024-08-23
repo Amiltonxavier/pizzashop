@@ -6,7 +6,9 @@ import { Input } from "@/components/ui/input"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { toast } from "sonner"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
+import { useMutation } from "@tanstack/react-query"
+import { signIn } from "@/api/sign-in"
 
 const signInForm = z.object({
   email: z.string().email(),
@@ -14,17 +16,28 @@ const signInForm = z.object({
 
 type SignFormProps = z.infer<typeof signInForm>
 
-export function SignIn() {
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm<SignFormProps>()
 
+
+export function SignIn() {
+  const [searchParams] = useSearchParams()
+  const { register, handleSubmit, formState: { isSubmitting } } =
+    useForm<SignFormProps>({
+      defaultValues: {
+        email: searchParams.get('email') ?? ''
+      }
+    })
+
+  const { mutateAsync: authenticate } = useMutation({
+    mutationFn: signIn
+  })
   async function handleSignIn(data: SignFormProps) {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      authenticate({ email: data.email })
 
       toast.success('Enviamos um link de autenticação no seu e-mail', {
         action: {
           label: "Reenviar",
-          onClick: () => handleSignIn(data) 
+          onClick: () => handleSignIn(data)
         }
       })
     } catch {
@@ -36,7 +49,7 @@ export function SignIn() {
     <>
       <Helmet title="Sign-in" />
       <div className="p-8">
-      <Button variant={"ghost"} asChild className="absolute right-4 top-8">
+        <Button variant={"ghost"} asChild className="absolute right-4 top-8">
           <Link to={"/sign-up"}> Novo estabelecimento</Link>
         </Button>
         <div className="w-[320px] flex flex-col justify-center gap-6">
