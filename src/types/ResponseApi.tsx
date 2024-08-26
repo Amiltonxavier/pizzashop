@@ -2,7 +2,7 @@ export  type Status = "pending" | "canceled" | "processing" | "delivering" | "de
 
 export type OrderResponse = {
     orderId: string;
-    createdAt: Date | null;
+    createdAt: string;
     status: Status
     customerName: string;
     total: number;

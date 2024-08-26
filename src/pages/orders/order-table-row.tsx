@@ -7,6 +7,8 @@ import OrdersDetails from './orders-details'
 import { OrderResponse } from '@/types/ResponseApi'
 import { OrderStatus } from '@/components/order-status'
 
+import { formatDistanceToNow } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 type Order = {
     order: OrderResponse
 }
@@ -26,7 +28,10 @@ export default function OrderTableRow({ order }: Order) {
                 </Dialog>
             </TableCell>
             <TableCell className="font-mono text-xs font-medium">{order.orderId}</TableCell>
-            <TableCell className="text-muted-foreground">há 16 min</TableCell>
+            <TableCell className="text-muted-foreground">{formatDistanceToNow(order.createdAt, {
+                locale: ptBR,
+                addSuffix: true
+            }) }</TableCell>
             <TableCell>
                 {
                     OrderStatus(order.status)

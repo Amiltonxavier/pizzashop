@@ -1,12 +1,15 @@
 import { api } from "@/lib/axios";
 import { OrdersResponse } from "@/types/ResponseApi";
 
+type GetOrderParams = {
+  pageIndex?: number
+}
 
 export class OrdersService {
-  async getOrder() {
+  async getOrder({pageIndex}: GetOrderParams) {
    const response = await api.get<OrdersResponse>("/orders", {
       params: {
-        pageIndex: 2,
+        pageIndex
       },
     });
     return response.data
