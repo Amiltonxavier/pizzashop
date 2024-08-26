@@ -4,9 +4,14 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 
 import { Search, ArrowRight, X } from 'lucide-react'
 import OrdersDetails from './orders-details'
+import { OrderResponse } from '@/types/ResponseApi'
+import { OrderStatus } from '@/components/order-status'
 
+type Order = {
+    order: OrderResponse
+}
 
-export default function OrderTableRow() {
+export default function OrderTableRow({ order }: Order) {
     return (
         <TableRow >
             <TableCell>
@@ -17,20 +22,21 @@ export default function OrderTableRow() {
                             <span className="sr-only">Detalhes do pedido</span>
                         </Button>
                     </DialogTrigger>
-                   <OrdersDetails />
+                    <OrdersDetails />
                 </Dialog>
             </TableCell>
-            <TableCell className="font-mono text-xs font-medium">4093902fk</TableCell>
+            <TableCell className="font-mono text-xs font-medium">{order.orderId}</TableCell>
             <TableCell className="text-muted-foreground">há 16 min</TableCell>
             <TableCell>
-                <div className="flex items-center gap-2">
-                    <span className="rounded-full size-2 bg-slate-400" />
-                    <span className="font-medium text-muted-foreground">Pendente</span>
-                </div>
+                {
+                    OrderStatus(order.status)
+                }
             </TableCell>
-            <TableCell className="font-medium">Amilton Xavier</TableCell>
+            <TableCell className="font-medium">{order.customerName}</TableCell>
             <TableCell className="">
-                1278kz
+                {
+                    order.total.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
+                }
             </TableCell>
             <TableCell>
                 <Button variant={'outline'} size={'xs'}>

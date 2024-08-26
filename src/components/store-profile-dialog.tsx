@@ -39,26 +39,26 @@ export default function StoreProfileDialog() {
             description: data?.description ?? ''
         }
     })
-    function updateManagedRestaurantCached( {name, description}: storeProfileProps ) {
-        const cashed = queryClient.getQueryData<getManagedRestaurantProps>(['managed-restaurant'])
-        if (cashed) {
+    function updateManagedRestaurantCached({ name, description }: storeProfileProps) {
+        const cached = queryClient.getQueryData<getManagedRestaurantProps>(['managed-restaurant'])
+        if (cached) {
             queryClient.setQueryData(['managed-restaurant'], {
-                ...cashed,
+                ...cached,
                 name,
                 description
             })
         }
-        return { cashed }
+        return { cached }
     }
 
     const { mutateAsync: update } = useMutation({
         mutationFn: updateProfile,
         onMutate({ name, description }) {
-            const { cashed } = updateManagedRestaurantCached({ name, description })
-            return { previous: cashed }
+            const { cached } = updateManagedRestaurantCached({ name, description })
+            return { previous: cached }
         },
-        onError(_, __, context){
-            if(context?.previous){
+        onError(_, __, context) {
+            if (context?.previous) {
                 updateManagedRestaurantCached(context.previous)
             }
         }
@@ -96,13 +96,15 @@ export default function StoreProfileDialog() {
                     <DialogClose>
                         <Button type='button' variant={'ghost'}>Cancelar</Button>
                     </DialogClose>
-                    <Button type='submit' variant={'success'} disabled={isSubmitting}>
-                        {
-                            isSubmitting ?
-                                <Spinner /> : <span>Salvar</span>
-                        }
+                    <DialogClose>
+                        <Button type='submit' variant={'success'} disabled={isSubmitting}>
+                            {
+                                isSubmitting ?
+                                    <Spinner /> : <span>Salvar</span>
+                            }
 
-                    </Button>
+                        </Button>
+                    </DialogClose>
                 </DialogFooter>
             </form>
         </DialogContent>
