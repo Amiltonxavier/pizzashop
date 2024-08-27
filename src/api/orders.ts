@@ -8,11 +8,11 @@ type GetOrderParams = {
   status: string | null;
 };
 
-type GetOrderDetails = {
+type OrderIdTypes = {
   orderId: string;
 };
 
-type GetOrderDetailsResponse = {
+export type GetOrderDetailsResponse = {
   status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
   id: string;
   createdAt: string;
@@ -45,12 +45,16 @@ export class OrdersService {
     return response.data;
   }
 
-  async getDetaildOrderById({orderId}: GetOrderDetails) {
+  async getDetaildOrderById({orderId}: OrderIdTypes) {
     console.log(orderId)
     const response = await api.get<GetOrderDetailsResponse>(
       `/orders/${orderId}`
     );
 
     return response.data;
+  }
+
+  async cancelOrder({ orderId }: OrderIdTypes) {
+    await api.patch(`/orders/${orderId}/cancel`);
   }
 }
