@@ -9,29 +9,31 @@ import { OrderStatus } from '@/components/order-status'
 
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { useState } from 'react'
 type Order = {
     order: OrderResponse
 }
 
 export default function OrderTableRow({ order }: Order) {
+    const [ openDetailsOrder, setOpenDetailsOrder ] = useState(false)
     return (
         <TableRow >
             <TableCell>
-                <Dialog>
+                <Dialog open={openDetailsOrder} onOpenChange={setOpenDetailsOrder} >
                     <DialogTrigger asChild>
                         <Button variant={'outline'} size={'xs'}>
                             <Search className="size-3" />
                             <span className="sr-only">Detalhes do pedido</span>
                         </Button>
                     </DialogTrigger>
-                    <OrdersDetails />
+                    <OrdersDetails orderId={order.orderId} open={openDetailsOrder} />
                 </Dialog>
             </TableCell>
             <TableCell className="font-mono text-xs font-medium">{order.orderId}</TableCell>
             <TableCell className="text-muted-foreground">{formatDistanceToNow(order.createdAt, {
                 locale: ptBR,
                 addSuffix: true
-            }) }</TableCell>
+            })}</TableCell>
             <TableCell>
                 {
                     OrderStatus(order.status)
@@ -40,7 +42,7 @@ export default function OrderTableRow({ order }: Order) {
             <TableCell className="font-medium">{order.customerName}</TableCell>
             <TableCell className="">
                 {
-                    order.total.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
+                    (order.total * 100).toLocaleString('pt-AO', { style: 'currency', currency: 'AOA' })
                 }
             </TableCell>
             <TableCell>

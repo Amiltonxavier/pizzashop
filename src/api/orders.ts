@@ -12,6 +12,26 @@ type GetOrderDetails = {
   orderId: string;
 };
 
+type GetOrderDetailsResponse = {
+  status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
+  id: string;
+  createdAt: string;
+  totalInCents: number;
+  customer: {
+    name: string;
+    email: string;
+    phone: string | null;
+  };
+  orderItems: {
+    id: string,
+    priceInCents: number,
+    quantity: number,
+    product: {
+        name: string
+    }
+  }[];
+};
+
 export class OrdersService {
   async getOrder({ pageIndex, customerName, orderId, status }: GetOrderParams) {
     const response = await api.get<OrdersResponse>("/orders", {
@@ -25,9 +45,12 @@ export class OrdersService {
     return response.data;
   }
 
-  async getDetaildOrderById({ orderId }: GetOrderDetails) {
-    const response = await api.get(`/orders/${orderId}`);
+  async getDetaildOrderById({orderId}: GetOrderDetails) {
+    console.log(orderId)
+    const response = await api.get<GetOrderDetailsResponse>(
+      `/orders/${orderId}`
+    );
 
-    return response.data
+    return response.data;
   }
 }
