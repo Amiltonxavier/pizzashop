@@ -57,4 +57,13 @@ export class OrdersService {
   async cancelOrder({ orderId }: OrderIdTypes) {
     await api.patch(`/orders/${orderId}/cancel`);
   }
+  async approveOrder({ orderId }: OrderIdTypes) {
+    await api.patch(`/orders/${orderId}/approve`);
+  }
+  async deliverOrder({ orderId }: OrderIdTypes) {
+    await api.patch(`/orders/${orderId}/deliver`);
+  }
+  async dispatchOrder({ orderId }: OrderIdTypes) {
+    await api.patch(`/orders/${orderId}/dispatch`);
+  }
 }
