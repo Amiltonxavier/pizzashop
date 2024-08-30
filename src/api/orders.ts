@@ -12,12 +12,6 @@ type OrderIdTypes = {
   orderId: string;
 };
 
-type getDailyRevenueInPeriodResponse = {
-  date: string;
-  receipt: number;
-}[]
-
-
 
 export type GetOrderDetailsResponse = {
   status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
