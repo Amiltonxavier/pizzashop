@@ -12,6 +12,13 @@ type OrderIdTypes = {
   orderId: string;
 };
 
+type getDailyRevenueInPeriodResponse = {
+  date: string;
+  receipt: number;
+}[]
+
+
+
 export type GetOrderDetailsResponse = {
   status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
   id: string;
@@ -66,4 +73,5 @@ export class OrdersService {
   async dispatchOrder({ orderId }: OrderIdTypes) {
     await api.patch(`/orders/${orderId}/dispatch`);
   }
+
 }
