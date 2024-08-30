@@ -2,6 +2,7 @@ import { MetricsService } from '@/api/metrics'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { useQuery } from '@tanstack/react-query'
 import { Utensils } from 'lucide-react'
+import { MetricsCardSkeleton } from './skeleton/metrics-card-skeleton'
 
 export default function MonthOrdersAmountCard() {
 
@@ -19,7 +20,7 @@ export default function MonthOrdersAmountCard() {
             </CardHeader>
             <CardContent className="space-y-1">
                 {
-                    mounthOrderAmount && (
+                    mounthOrderAmount ? (
                         <>
                             <span className="text-3xl font-bold tracking-tight">
                                 {mounthOrderAmount?.amount.toLocaleString('pt-AO')}
@@ -46,7 +47,7 @@ export default function MonthOrdersAmountCard() {
                             </p>
 
                         </>
-                    )
+                    ) : <MetricsCardSkeleton />
                 }
             </CardContent>
         </Card>

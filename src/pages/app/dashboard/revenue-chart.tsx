@@ -8,6 +8,7 @@ import { DatePickerRange } from "@/components/ui/date-range-picker";
 import { useMemo, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { subDays } from "date-fns";
+import { Loader2 } from "lucide-react";
 
 export default function RevenueChart() {
     const [dateRange, setDateRange] = useState<DateRange | undefined>({
@@ -22,7 +23,7 @@ export default function RevenueChart() {
     })
 
     const chartItem = useMemo(() => {
-       return dailyRevenueInPeriod?.map((chartItem) => {
+        return dailyRevenueInPeriod?.map((chartItem) => {
             return {
                 date: chartItem.date,
                 receipt: chartItem.receipt / 100
@@ -51,7 +52,7 @@ export default function RevenueChart() {
 
             <CardContent>
                 {
-                    chartItem && (
+                    chartItem ? (
                         <ResponsiveContainer width="100%" height={240}>
                             <LineChart data={chartItem} style={{ fontSize: 12 }} >
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
@@ -73,6 +74,10 @@ export default function RevenueChart() {
                                 <Line type="monotone" dataKey="receipt" stroke={colors['violet'][500]} activeDot={{ r: 8 }} />
                             </LineChart>
                         </ResponsiveContainer>
+                    ) : (
+                        <div className='flex items-center justify-center h-[240px]'>
+                            <Loader2 className='size-8 animate-spin text-muted-foreground' />
+                        </div>
                     )
                 }
 

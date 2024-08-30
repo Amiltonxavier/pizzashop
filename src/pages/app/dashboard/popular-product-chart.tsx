@@ -1,7 +1,7 @@
 import { MetricsService } from '@/api/metrics';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { useQuery } from '@tanstack/react-query';
-import { BarChart } from 'lucide-react'
+import { BarChart, Loader2 } from 'lucide-react'
 
 
 import { PieChart, ResponsiveContainer, Pie, Cell } from 'recharts'
@@ -37,7 +37,7 @@ export default function PopularProductChart() {
             <CardContent>
                 <div style={{ width: '100%', height: 260 }}>
                     {
-                        popularProduct && (
+                        popularProduct ? (
                             <ResponsiveContainer width="100%" >
                                 <PieChart style={{ fontSize: 12 }}>
                                     <Pie
@@ -93,7 +93,11 @@ export default function PopularProductChart() {
                                     </Pie>
                                 </PieChart>
                             </ResponsiveContainer>
-                        )
+                        ) : (
+                            <div className='flex items-center justify-center h-[240px]'>
+                                <Loader2 className='size-8 animate-spin text-muted-foreground' />
+                            </div>)
+
                     }
                 </div>
             </CardContent>
