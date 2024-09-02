@@ -5,6 +5,7 @@ import { TableRow, TableCell, Table, TableBody, TableHeader, TableHead, TableFoo
 import { useQuery } from '@tanstack/react-query'
 import { formatDistanceToNow } from 'date-fns'
 import { pt } from 'date-fns/locale'
+import { OrderDetailsSkeleton } from './skeleton/order-details-skeleton'
 
 type OrdersDetailsProps = {
     orderId: string,
@@ -20,7 +21,7 @@ export default function OrdersDetails({ orderId, open }: OrdersDetailsProps) {
         queryKey: ['order', orderId],
         staleTime: 2000,
 
-        queryFn: () => ordersService.getDetaildOrderById({orderId}),
+        queryFn: () => ordersService.getDetaildOrderById({ orderId }),
         enabled: open
     })
 
@@ -32,7 +33,7 @@ export default function OrdersDetails({ orderId, open }: OrdersDetailsProps) {
             </DialogHeader>
 
             {
-                order && (
+                order ? (
                     <div className='space-y-6'>
                         <Table>
                             <TableBody>
@@ -102,7 +103,7 @@ export default function OrdersDetails({ orderId, open }: OrdersDetailsProps) {
                             </TableFooter>
                         </Table>
                     </div>
-                )
+                ) : <OrderDetailsSkeleton />
             }
         </DialogContent>
     )
